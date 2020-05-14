@@ -1,0 +1,2 @@
+rootProject.name='FlightBooking'
+include ':app'
