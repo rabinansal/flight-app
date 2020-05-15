@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/md_white_1000"
+    android:layout_marginLeft="@dimen/_10sdp"
+    android:layout_marginRight="@dimen/_10sdp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_60sdp"
+        android:layout_height="@dimen/_55sdp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -20,8 +22,8 @@
 
             <ImageView
                 android:id="@+id/minusAdult"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
                 android:padding="@dimen/_8sdp"
                 android:src="@drawable/ic_minus"/>
@@ -66,8 +68,8 @@
 
             <ImageView
                 android:id="@+id/plusAdult"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
                 android:padding="@dimen/_8sdp"
                 android:src="@drawable/ic_plus"/>
@@ -75,10 +77,14 @@
         </LinearLayout>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/md_blue_grey_50"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_60sdp"
+        android:layout_height="@dimen/_55sdp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -89,8 +95,8 @@
 
             <ImageView
                 android:id="@+id/minusChild"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
                 android:padding="@dimen/_8sdp"
                 android:src="@drawable/ic_minus"/>
@@ -135,8 +141,8 @@
 
             <ImageView
                 android:id="@+id/plusChild"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
                 android:padding="@dimen/_8sdp"
                 android:src="@drawable/ic_plus"/>
@@ -144,10 +150,14 @@
         </LinearLayout>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/md_blue_grey_50"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_60sdp"
+        android:layout_height="@dimen/_55sdp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -158,8 +168,8 @@
 
             <ImageView
                 android:id="@+id/minusInfant"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
                 android:padding="@dimen/_8sdp"
                 android:src="@drawable/ic_minus"/>
@@ -204,8 +214,8 @@
 
             <ImageView
                 android:id="@+id/plusInfant"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
                 android:padding="@dimen/_8sdp"
                 android:src="@drawable/ic_plus"/>
@@ -213,12 +223,16 @@
         </LinearLayout>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/md_blue_grey_50"/>
 
     <LinearLayout
         android:id="@+id/btnDone"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp"
-        android:layout_margin="@dimen/_5sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_margin="@dimen/_10sdp"
         android:gravity="center"
         android:background="@drawable/search_background"
         android:backgroundTint="@color/colorPrimary">

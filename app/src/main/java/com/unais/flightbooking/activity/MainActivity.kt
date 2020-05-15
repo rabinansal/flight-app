@@ -8,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.format.DateFormat
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -20,44 +18,40 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.unais.flightbooking.R
 import com.unais.flightbooking.adapter.AirportAdapter
-import com.unais.flightbooking.model.Airport
+import com.unais.flightbooking.model.AirportResponse
+import com.unais.flightbooking.viewmodel.ApplicationViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_traveller.*
 import kotlinx.android.synthetic.main.bottom_traveller.view.*
 import kotlinx.android.synthetic.main.popup_search_flight.view.*
 import kotlinx.android.synthetic.main.popup_search_flight.view.rvFlights
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity() {
 
-    lateinit var gson: Gson
-    var airportList = arrayListOf<Airport>()
+
+    var airportList = ArrayList<AirportResponse>()
     lateinit var mPopupWindow: PopupWindow
     var origin = ""
+    var adapter: AirportAdapter?=null
+    var fromAirPort = AirportResponse()
+    var toAirPort = AirportResponse()
 
-    var fromAirPort = Airport()
-    var toAirPort = Airport()
 
-
-    var adultCount = 1;
-    var childCount = 0;
-    var infantCount = 0;
+    var adultCount = 1
+    var childCount = 0
+    var infantCount = 0
 
 
     var depDate = ""
@@ -66,18 +60,18 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
     var classType = "ECONOMY"
     var twoWay = false
 
+    private lateinit var appViewModel: ApplicationViewModel
 
-
-    //
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        appViewModel = ViewModelProviders.of(this).get(ApplicationViewModel::class.java)
 
         setUpInitDay()
-
+        fromAirPort.code="BOM"
+        toAirPort.code="DEL"
         tvTravellerAdultCount.text = adultCount.toString()
 
         tvRetOnTitle.isEnabled = false
@@ -88,31 +82,6 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
         tvRetDateDay.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
         tvRetMonthYr.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
         tvRetDateWeek.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
-
-
-        val data = getJsonDataFromAsset(this, "airports.json");
-
-        gson = Gson()
-        val turnsType = object : TypeToken<List<Airport>>() {}.type
-        airportList = gson.fromJson<ArrayList<Airport>>(data, turnsType)
-
-        for( i in 0..airportList.lastIndex){
-
-            if(airportList[i].code == "BOM"){
-                fromAirPort = airportList[i]
-
-                tvAirport.text = fromAirPort.nameTranslations.it
-                tvShortCode.text = fromAirPort.code
-
-            }else if(airportList[i].code == "CCJ"){
-                toAirPort = airportList[i]
-
-                tvToAirport.text = toAirPort.nameTranslations.it
-                tvToShortCode.text = toAirPort.code
-            }
-
-        }
-
 
         tvAirport.setOnClickListener {
             origin = "From"
@@ -127,41 +96,40 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
         tvShortCode.setOnClickListener { tvAirport.performClick() }
         tvToShortCode.setOnClickListener { tvAirport.performClick() }
 
+        chip_way.setOnCheckedChangeListener { group: ChipGroup?, checkedId: Int ->
+            val chip = group?.findViewById<Chip>(checkedId)
+            chip.let {
 
 
-        swichMulticity.setOnCheckedChangeListener { _, isChecked ->
+                twoWay = it?.chipText.toString() != "  One Way  "
 
-            if(isChecked){
-                twoWay = true
+                if(twoWay){
+                    twoWay = true
 
-                tvRetOnTitle.isEnabled = true
-                tvRetDateDay.isEnabled = true
-                tvRetMonthYr.isEnabled = true
-                tvRetDateWeek.isEnabled = true
+                    tvRetOnTitle.isEnabled = true
+                    tvRetDateDay.isEnabled = true
+                    tvRetMonthYr.isEnabled = true
+                    tvRetDateWeek.isEnabled = true
 
-                tvRetDateDay.setTextColor(ContextCompat.getColor(this,R.color.md_grey_800))
-                tvRetMonthYr.setTextColor(ContextCompat.getColor(this,R.color.md_grey_800))
-                tvRetDateWeek.setTextColor(ContextCompat.getColor(this,R.color.md_grey_800))
-            }else{
+                    tvRetDateDay.setTextColor(ContextCompat.getColor(this,R.color.md_grey_800))
+                    tvRetMonthYr.setTextColor(ContextCompat.getColor(this,R.color.md_grey_800))
+                    tvRetDateWeek.setTextColor(ContextCompat.getColor(this,R.color.md_grey_800))
+                }else{
 
-                twoWay = false
-                tvRetOnTitle.isEnabled = false
-                tvRetDateDay.isEnabled = false
-                tvRetMonthYr.isEnabled = false
-                tvRetDateWeek.isEnabled = false
+                    twoWay = false
+                    tvRetOnTitle.isEnabled = false
+                    tvRetDateDay.isEnabled = false
+                    tvRetMonthYr.isEnabled = false
+                    tvRetDateWeek.isEnabled = false
 
-                tvRetDateDay.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
-                tvRetMonthYr.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
-                tvRetDateWeek.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
+                    tvRetDateDay.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
+                    tvRetMonthYr.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
+                    tvRetDateWeek.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
+                }
             }
-
         }
-
-
         imageView.setOnClickListener {
-
             swapAirports(fromAirPort,toAirPort)
-
         }
 
 
@@ -215,30 +183,6 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
             tvDepDateDay.performClick()
         }
 
-      /*  pickerFrom.addOnPositiveButtonClickListener(MaterialPickerOnPositiveButtonClickListener {
-
-            val cal = Calendar.getInstance(Locale.ENGLISH)
-            cal.timeInMillis = it
-            val date = DateFormat.format("dd-MMM-yyyy hh:mm:ss EEEE",cal).toString()
-
-
-            val day = DateFormat.format("dd",cal).toString()
-            val month_yr = DateFormat.format("MMMM yyyy",cal).toString()
-            val weekDay = DateFormat.format("EEEE",cal).toString()
-
-
-            tvDepDateDay.text = day
-            tvDepMonthDateYr.text = month_yr
-            tvDepMonthDateWeek.text = weekDay
-
-
-            depDate = "$day $month_yr"
-
-//            val dff = SimpleDateFormat("dd MMM yyyy")
-//            val minDate = dff.parse(depDate)
-
-
-        })*/
 
         tvRetDateDay.setOnClickListener {
             val c = Calendar.getInstance()
@@ -264,15 +208,6 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
             },mYear,mMonth,mDay)
 
 
-//            val sddff = SimpleDateFormat("dd MMMM yyyy")
-//            val calendr = Calendar.getInstance()
-//            val dt = sddff.parse(depDate) as Date
-//            calendr.time = dt
-//
-//
-//
-//            dpd.datePicker.minDate = calendr.timeInMillis
-
             dpd.datePicker.minDate =Calendar.getInstance().timeInMillis
                 dpd.show()
         }
@@ -287,25 +222,6 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
             tvRetDateDay.performClick()
         }
 
-       /* pickerTo.addOnPositiveButtonClickListener(MaterialPickerOnPositiveButtonClickListener {
-
-            val cal = Calendar.getInstance(Locale.ENGLISH)
-            cal.timeInMillis = it
-            val date = DateFormat.format("dd-MMM-yyyy hh:mm:ss EEEE",cal).toString()
-
-
-            val day = DateFormat.format("dd",cal).toString()
-            val month_yr = DateFormat.format("MMM yyyy",cal).toString()
-            val weekDay = DateFormat.format("EEEE",cal).toString()
-
-
-            tvRetDateDay.text = day
-            tvRetMonthYr.text = month_yr
-            tvRetDateWeek.text = weekDay
-
-
-            retDate = "$day $month_yr"
-        })*/
 
         chipGroup.setOnCheckedChangeListener { group: ChipGroup?, checkedId: Int ->
             val chip = group?.findViewById<Chip>(checkedId)
@@ -387,18 +303,14 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
         retDate = "$day $month"
     }
 
-    private fun swapAirports(frmAirport: Airport,tAirport:Airport) {
+    private fun swapAirports(frmAirport: AirportResponse,tAirport:AirportResponse) {
 
         fromAirPort = frmAirport
         toAirPort = tAirport
 
-        var airport = fromAirPort
+        val airport = fromAirPort
         fromAirPort = toAirPort
         toAirPort = airport
-
-
-//        fromAirPort = frAp
-//        toAirPort = toAp
 
 
         val frmAp = tvAirport.text.toString()
@@ -413,21 +325,8 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
         tvToAirport.text = frmAp
         tvToShortCode.text = frmCode
 
-
-
-        //Toast.makeText(this,"FROM = ${fromAirPort.name}    TO = ${toAirPort.name}",Toast.LENGTH_SHORT).show()
     }
 
-    fun getJsonDataFromAsset(context: Context, fileName: String): String? {
-        val jsonString: String
-        try {
-            jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
-        } catch (ioException: IOException) {
-            ioException.printStackTrace()
-            return null
-        }
-        return jsonString
-    }
 
     private fun displaySearchPopup(title: String, searchHint: String, origin: String) {
 
@@ -447,13 +346,10 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
         customViewCall.textViewTitle.text = title
         customViewCall.edtSearch.hint = searchHint
 
-
-        val adapter = AirportAdapter(this, airportList, this)
         val rvFlights = customViewCall.rvFlights as RecyclerView
         rvFlights.setHasFixedSize(true)
         rvFlights.layoutManager = LinearLayoutManager(this)
-        rvFlights.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        rvFlights.adapter = adapter
+        rvFlights.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         rvFlights.visibility = View.GONE
 
         customViewCall.edtSearch.addTextChangedListener(object : TextWatcher,
@@ -464,29 +360,47 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
                     rvFlights.visibility = View.GONE
                 }else{
                     rvFlights.visibility = View.VISIBLE
+
+                    appViewModel.getAirportlist(s.toString()).observe(this@MainActivity, androidx.lifecycle.Observer {
+
+
+                        if(it.size!=0){
+                            airportList= it as ArrayList<AirportResponse>
+                            adapter= AirportAdapter(this@MainActivity, airportList, this)
+                            rvFlights.adapter = adapter
+
+                        }
+
+
+
+                    })
+
                 }
             }
 
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
 
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-                if(s.isEmpty()){
-                    rvFlights.visibility = View.GONE
-                }else{
-                    rvFlights.visibility = View.VISIBLE
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun onItemClick(item: AirportResponse) {
+
+                if(origin.equals("From")){
+                    tvAirport.text = item.name
+                    tvShortCode.text = item.code
+
+                    fromAirPort = item
                 }
-                adapter.getFilter().filter(s)
-            }
+                else if(origin.equals("To")){
+                    tvToAirport.text = item.name
+                    tvToShortCode.text = item.code
 
-            override fun onItemClick(item: Airport) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    toAirPort = item
+                }
+
+                mPopupWindow.dismiss()
             }
         })
 
@@ -501,11 +415,11 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
 
     private fun openTravellerSheet(){
 
-        var adult = adultCount;
-        var child = childCount;
-        var infant = infantCount;
-        
-        var totalCount = adult+child+infant;
+        var adult = adultCount
+        var child = childCount
+        var infant = infantCount
+
+        var totalCount = adult+child+infant
 
         val bottomSheetDialog = BottomSheetDialog(this,R.style.BootomSheetDialogTheme)
         val bottomSheetView = LayoutInflater.from(applicationContext).inflate(R.layout.bottom_traveller,ll_bottom_sheet)
@@ -516,20 +430,20 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
 
         bottomSheetView.plusAdult.setOnClickListener {
             if(adult >= 0){
-                if(totalCount < 6 ){
-                    adult += 1;
+                if(totalCount < 9 ){
+                    adult += 1
                     totalCount += 1
                     bottomSheetView.tvCountAdult.text = adult.toString()
                 }else{
-                    Toast.makeText(this,"Maximum 6 travellers only",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this,"Maximum 9 travellers only",Toast.LENGTH_SHORT).show()
                 }
 
             }
         }
 
         bottomSheetView.minusAdult.setOnClickListener {
-            if(adult > 0){
-                adult -= 1;
+            if(adult > 1){
+                adult -= 1
                 totalCount -= 1
                 bottomSheetView.tvCountAdult.text = adult.toString()
             }
@@ -537,39 +451,43 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
 
         bottomSheetView.plusChild.setOnClickListener {
             if(child >= 0){
-                if(totalCount < 6 ) {
-                    child += 1;
+                if(totalCount < 9 ) {
+                    child += 1
                     totalCount += 1
                     bottomSheetView.tvCountChild.text = child.toString()
                 }else{
-                    Toast.makeText(this,"Maximum 6 travellers only",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this,"Maximum 9 travellers only",Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         bottomSheetView.minusChild.setOnClickListener {
             if(child > 0){
-                child -= 1;
+                child -= 1
                 totalCount -= 1
                 bottomSheetView.tvCountChild.text = child.toString()
             }
         }
 
         bottomSheetView.plusInfant.setOnClickListener {
-            if(infant >= 0){
-                if(totalCount < 6 ) {
-                    infant += 1;
+            if(infant <adult){
+                if(totalCount < 9 ) {
+                    infant += 1
                     totalCount += 1
                     bottomSheetView.tvCountInfant.text = infant.toString()
                 }else{
-                    Toast.makeText(this,"Maximum 6 travellers only",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this,"Maximum 9 travellers only",Toast.LENGTH_SHORT).show()
+
                 }
+            }
+            else{
+                Toast.makeText(this,"Number of infant may not be higher than adults",Toast.LENGTH_SHORT).show()
             }
         }
 
         bottomSheetView.minusInfant.setOnClickListener {
             if(infant > 0){
-                infant -= 1;
+                infant -= 1
                 totalCount -= 1
                 bottomSheetView.tvCountInfant.text = infant.toString()
             }
@@ -604,24 +522,5 @@ class MainActivity : AppCompatActivity(), AirportAdapter.OnItemClickListener {
         })
     }
 
-    override fun onItemClick(item: Airport) {
-
-
-        //Toast.makeText(this, "${item.name}", Toast.LENGTH_SHORT).show();
-        if(origin.equals("From")){
-            tvAirport.text = item.nameTranslations.it
-            tvShortCode.text = item.code
-
-            fromAirPort = item
-        }
-        else if(origin.equals("To")){
-            tvToAirport.text = item.nameTranslations.it
-            tvToShortCode.text = item.code
-
-            toAirPort = item
-        }
-
-        mPopupWindow.dismiss()
-    }
 
 }

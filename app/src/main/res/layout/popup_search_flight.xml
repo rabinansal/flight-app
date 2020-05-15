@@ -34,7 +34,7 @@
                 android:layout_marginStart="8dp"
                 android:text="Origin"
                 android:fontFamily="@font/ms_bold"
-                android:textSize="@dimen/_18ssp"
+                android:textSize="@dimen/_15ssp"
                 android:textColor="@color/md_white_1000"
                 android:includeFontPadding="false" />
 
@@ -50,6 +50,7 @@
             android:drawableStart="@drawable/search_icon_search"
             android:drawablePadding="@dimen/_8sdp"
             android:fontFamily="@font/ms_medium"
+            android:textSize="@dimen/_13sdp"
             android:hint="Search"
             android:imeOptions="actionDone"
             android:includeFontPadding="false"
