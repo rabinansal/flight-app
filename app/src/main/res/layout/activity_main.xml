@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/root_layout"
     android:background="@color/colorPrimary"
-    tools:context=".activity.MainActivity">
+    tools:context="com.travelrights.activity.MainActivity">
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -402,7 +402,7 @@
                     android:fontFamily="@font/mirage_bold_font"
                     android:includeFontPadding="false"
                     android:text="25"
-                    android:textColor="@color/md_grey_800"
+                    android:textColor="@color/md_black_1000"
                     android:textSize="@dimen/_25ssp"
                     app:layout_constraintBottom_toBottomOf="@+id/tvDepMonthDateWeek"
                     app:layout_constraintStart_toStartOf="@+id/guideline10"

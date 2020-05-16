@@ -1,13 +1,14 @@
-package com.unais.flightbooking.viewmodel
+package com.travelrights.viewmodel
 
 
 
-import com.unais.flightbooking.model.AirportResponse
+import com.google.gson.JsonObject
+import com.travelrights.model.AirportResponse
+import com.travelrights.model.Flight_searchResponse
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Url
+import retrofit2.http.*
 
 
 interface Api {
@@ -31,5 +32,8 @@ interface Api {
     @GET
     fun airportList(@Url url: String?): Call<List<AirportResponse>>
 
+    @Headers("Accept: application/json", "Content-Type: application/json")
+    @POST
+    fun flight_search(@Url url: String?, @Body task: JsonObject?): Call<Flight_searchResponse>
 
 }

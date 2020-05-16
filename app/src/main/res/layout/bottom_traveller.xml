@@ -25,7 +25,7 @@
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
-                android:padding="@dimen/_8sdp"
+                android:padding="@dimen/_7sdp"
                 android:src="@drawable/ic_minus"/>
 
         </LinearLayout>
@@ -71,8 +71,8 @@
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
-                android:padding="@dimen/_8sdp"
-                android:src="@drawable/ic_plus"/>
+                android:padding="@dimen/_5sdp"
+                android:src="@drawable/ic_add"/>
 
         </LinearLayout>
 
@@ -80,7 +80,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/md_blue_grey_50"/>
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@color/md_grey_300"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -98,7 +100,7 @@
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
-                android:padding="@dimen/_8sdp"
+                android:padding="@dimen/_7sdp"
                 android:src="@drawable/ic_minus"/>
 
         </LinearLayout>
@@ -144,8 +146,8 @@
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
-                android:padding="@dimen/_8sdp"
-                android:src="@drawable/ic_plus"/>
+                android:padding="@dimen/_5sdp"
+                android:src="@drawable/ic_add"/>
 
         </LinearLayout>
 
@@ -153,7 +155,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/md_blue_grey_50"/>
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@color/md_grey_300"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -171,7 +175,7 @@
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
-                android:padding="@dimen/_8sdp"
+                android:padding="@dimen/_7sdp"
                 android:src="@drawable/ic_minus"/>
 
         </LinearLayout>
@@ -217,8 +221,8 @@
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:background="@drawable/circle"
-                android:padding="@dimen/_8sdp"
-                android:src="@drawable/ic_plus"/>
+                android:padding="@dimen/_5sdp"
+                android:src="@drawable/ic_add"/>
 
         </LinearLayout>
 
@@ -226,7 +230,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/md_blue_grey_50"/>
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@color/md_grey_300"/>
 
     <LinearLayout
         android:id="@+id/btnDone"
