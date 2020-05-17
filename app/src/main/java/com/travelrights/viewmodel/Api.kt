@@ -5,6 +5,7 @@ package com.travelrights.viewmodel
 import com.google.gson.JsonObject
 import com.travelrights.model.AirportResponse
 import com.travelrights.model.Flight_searchResponse
+import com.travelrights.model.SearchResultResponse
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -35,5 +36,8 @@ interface Api {
     @Headers("Accept: application/json", "Content-Type: application/json")
     @POST
     fun flight_search(@Url url: String?, @Body task: JsonObject?): Call<Flight_searchResponse>
+
+    @GET
+    fun flight_search_result(@Url url: String?):Call<List<SearchResultResponse>>
 
 }

@@ -44,4 +44,12 @@
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/md_black_1000</item>
     </style>
+
+    <style name="CustomCalendar">
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">start|left</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:color">@color/custom_calendar_text_selector</item>
+    </style>
 </resources>

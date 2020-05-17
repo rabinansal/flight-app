@@ -378,7 +378,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.5" />
+                    app:layout_constraintGuide_begin="206dp" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline14"
@@ -393,6 +393,24 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent=".33" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toBottomOf="@+id/view"
+                    android:id="@+id/dep_date"
+                    app:layout_constraintBottom_toTopOf="@+id/tvSplitView2"
+                    app:layout_constraintEnd_toStartOf="@+id/tvSplitVertical2"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toBottomOf="@+id/view"
+                    android:id="@+id/ret_date"
+                    app:layout_constraintBottom_toTopOf="@+id/tvSplitView2"
+                    app:layout_constraintStart_toEndOf="@+id/tvSplitVertical2"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <TextView
                     android:id="@+id/tvDepDateDay"
@@ -418,7 +436,7 @@
                     android:fontFamily="@font/mirage_bold_font"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:text="2"
+                    android:text="1"
                     android:textColor="@color/md_grey_800"
                     android:textSize="@dimen/_25ssp"
                     app:layout_constraintEnd_toStartOf="@+id/guideline15"
@@ -494,7 +512,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_medium"
+                    android:fontFamily="@font/ms_semibold"
                     android:text="FEB 2019"
                     android:textAllCaps="true"
                     android:textColor="@color/md_grey_800"
@@ -676,6 +694,16 @@
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
         app:srcCompat="@drawable/fly_emirates_cropped" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/progress_circular"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -29,7 +29,13 @@ class AirportAdapter(val context: Context, val list: List<AirportResponse>, val 
 
         holder.airportCode.text = item.code
         holder.airportPlace.text = item.name
-        holder.airportName.text = item.main_airport_name
+        if(item.main_airport_name!=null){
+            holder.airportName.text = item.main_airport_name
+        }
+        else{
+            holder.airportName.text = "Any airport"
+        }
+
         holder.itemView.setOnClickListener {
             listener.onItemClick(datasFiltered[position])
         }

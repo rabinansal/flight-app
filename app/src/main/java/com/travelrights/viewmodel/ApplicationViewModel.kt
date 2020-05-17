@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
 import com.travelrights.model.AirportResponse
 import com.travelrights.model.Flight_searchResponse
+import com.travelrights.model.SearchResultResponse
 
 class ApplicationViewModel (application: Application) : AndroidViewModel(application) {
 
@@ -26,5 +27,9 @@ class ApplicationViewModel (application: Application) : AndroidViewModel(applica
     }
     fun flight_search(jobj:JsonObject): MutableLiveData<Flight_searchResponse> {
         return appRepository.flight_search(jobj)
+    }
+
+    fun flight_search_result(uuid: String): MutableLiveData<List<SearchResultResponse>>  {
+        return appRepository.flight_search_result(uuid)
     }
 }

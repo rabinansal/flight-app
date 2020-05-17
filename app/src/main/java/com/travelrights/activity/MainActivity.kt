@@ -3,6 +3,7 @@ package com.travelrights.activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -15,7 +16,6 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
@@ -27,6 +27,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.squareup.timessquare.CalendarPickerView
 import com.travelrights.R
 import com.travelrights.adapter.AirportAdapter
 import com.travelrights.model.AirportResponse
@@ -34,7 +35,9 @@ import com.travelrights.viewmodel.ApplicationViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_traveller.*
 import kotlinx.android.synthetic.main.bottom_traveller.view.*
+import kotlinx.android.synthetic.main.popup_calander.view.*
 import kotlinx.android.synthetic.main.popup_search_flight.view.*
+import kotlinx.android.synthetic.main.popup_search_flight.view.textViewTitle
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
     var airportList = ArrayList<AirportResponse>()
     lateinit var mPopupWindow: PopupWindow
+    lateinit var mPopupWindow1: PopupWindow
     var origin = ""
     var adapter: AirportAdapter?=null
     var fromAirPort = AirportResponse()
@@ -146,83 +150,14 @@ class MainActivity : AppCompatActivity() {
             openTravellerSheet()
         }
 
-        tvDepDateDay.setOnClickListener {
-           // pickerFrom.show(supportFragmentManager,pickerFrom.toString())
-
-            val c = Calendar.getInstance()
-            var mYear = c.get(Calendar.YEAR)
-            var mMonth = c.get(Calendar.MONTH)
-            var mDay = c.get(Calendar.DAY_OF_MONTH)
-
-            val dpd = DatePickerDialog(this,R.style.DialogTheme,DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                
-                var date = "$dayOfMonth ${month+1} $year"
-
-                val dateDate = SimpleDateFormat("dd MM yyyy").parse(date)
-
-                var weekDay = SimpleDateFormat("EEEE").format(dateDate)
-                var monthYr = SimpleDateFormat("MMMM yyyy").format(dateDate)
-                var dom = SimpleDateFormat("dd").format(dateDate)
-                
-                tvDepDateDay.text = dom
-                tvDepMonthDateYr.text = monthYr
-                tvDepMonthDateWeek.text = weekDay
-
-                depDate = "$dom $monthYr"
-            },mYear,mMonth,mDay)
-            dpd.datePicker.minDate = Calendar.getInstance().timeInMillis
-            dpd.show()
+        dep_date.setOnClickListener {
+            calander_popup("dep")
         }
 
-        tvDepMonthDateYr.setOnClickListener {
-//            pickerFrom.show(supportFragmentManager,pickerFrom.toString())
-            tvDepDateDay.performClick()
+        ret_date.setOnClickListener {
+
+            calander_popup("return")
         }
-
-        tvDepMonthDateWeek.setOnClickListener {
-//            pickerFrom.show(supportFragmentManager,pickerFrom.toString())
-            tvDepDateDay.performClick()
-        }
-
-
-        tvRetDateDay.setOnClickListener {
-            val c = Calendar.getInstance()
-            var mYear = c.get(Calendar.YEAR)
-            var mMonth = c.get(Calendar.MONTH)
-            var mDay = c.get(Calendar.DAY_OF_MONTH)
-
-            val dpd = DatePickerDialog(this,R.style.DialogTheme,DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-
-                var date = "$dayOfMonth ${month+1} $year"
-
-                val dateDate = SimpleDateFormat("dd MM yyyy").parse(date)
-
-                var weekDay = SimpleDateFormat("EEEE").format(dateDate)
-                var monthYr = SimpleDateFormat("MMMM yyyy").format(dateDate)
-                var dom = SimpleDateFormat("dd").format(dateDate)
-
-                tvRetDateDay.text  = dom
-                tvRetMonthYr.text = monthYr
-                tvRetDateWeek.text  = weekDay
-
-                retDate = "$dom $monthYr"
-            },mYear,mMonth,mDay)
-
-
-            dpd.datePicker.minDate =Calendar.getInstance().timeInMillis
-                dpd.show()
-        }
-
-        tvRetMonthYr.setOnClickListener {
-            //pickerTo.show(supportFragmentManager,pickerTo.toString())
-            tvRetDateDay.performClick()
-        }
-
-        tvRetDateWeek.setOnClickListener {
-           // pickerTo.show(supportFragmentManager,pickerTo.toString())
-            tvRetDateDay.performClick()
-        }
-
 
         chipGroup.setOnCheckedChangeListener { group: ChipGroup?, checkedId: Int ->
             val chip = group?.findViewById<Chip>(checkedId)
@@ -255,7 +190,7 @@ class MainActivity : AppCompatActivity() {
             else if(twoWay && returnDate.before(departDate)){
                     Toast.makeText(this, "Please choose correct Date", Toast.LENGTH_SHORT).show()
             } else {
-                
+
                 if(twoWay){
 
                     val jsonObj1 = JsonObject()
@@ -309,15 +244,74 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 println("********$jsonObj")
+                progress_circular.visibility=View.VISIBLE
                 appViewModel.flight_search(jsonObj).observe(this, androidx.lifecycle.Observer {
 
-                    Toast.makeText(this, it.search_id, Toast.LENGTH_SHORT).show()
+                    val i= Intent(applicationContext,SearchResultActivity::class.java)
+                    i.putExtra("search_id",it.search_id!!)
+                    startActivity(i)
+                    progress_circular.visibility=View.GONE
+
                 })
 
             }
         }
 
     }
+
+    private fun calander_popup(dep: String) {
+        val inflater =
+            applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val customViewCall1 = inflater.inflate(R.layout.popup_calander, null)
+        mPopupWindow1 = PopupWindow(customViewCall1, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+        customViewCall1.close.setOnClickListener {
+            mPopupWindow1.dismiss()
+        }
+        val nextYear: Calendar = Calendar.getInstance()
+        nextYear.add(Calendar.YEAR, 1)
+        val today = Date()
+        customViewCall1.calendar_view.init(today, nextYear.getTime()).withSelectedDate(today)
+        customViewCall1.calendar_view.clearHighlightedDates()
+        customViewCall1.calendar_view.setOnDateSelectedListener(object : CalendarPickerView.OnDateSelectedListener {
+            override fun onDateSelected(date: Date?) {
+
+                val weekDay = SimpleDateFormat("EEEE").format(date!!)
+                val monthYr = SimpleDateFormat("MMMM yyyy").format(date)
+                val dom = SimpleDateFormat("dd").format(date)
+
+                if(dep=="dep"){
+                    tvDepDateDay.text = dom
+                    tvDepMonthDateYr.text = monthYr
+                    tvDepMonthDateWeek.text = weekDay
+
+                    depDate = "$dom $monthYr"
+                }
+                else{
+                    tvRetDateDay.text  = dom
+                    tvRetMonthYr.text = monthYr
+                    tvRetDateWeek.text  = weekDay
+
+                    retDate = "$dom $monthYr"
+                }
+                mPopupWindow1.dismiss()
+            }
+
+            override fun onDateUnselected(date: Date?) {
+
+            }
+
+        })
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow1.elevation = 5.0f
+        }
+
+        mPopupWindow1.isFocusable = true
+        mPopupWindow1.animationStyle = R.style.popupAnimation
+        mPopupWindow1.showAtLocation(root_layout, Gravity.CENTER, 0, 0)
+    }
+
     fun md5(s: String): String? {
         val MD5 = "MD5"
         try { // Create MD5 Hash

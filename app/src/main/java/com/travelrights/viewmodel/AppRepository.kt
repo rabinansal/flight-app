@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
 import com.travelrights.model.AirportResponse
 import com.travelrights.model.Flight_searchResponse
+import com.travelrights.model.SearchResultResponse
 import com.travelrights.viewmodel.Api.Constants.BASE_URL
 import retrofit2.Call
 import retrofit2.Callback
@@ -74,6 +75,34 @@ class AppRepository (application: Application) {
         })
 
         return flight_searchLiveData
+    }
+    val flight_search_resultLiveData = MutableLiveData<List<SearchResultResponse>> ()
+    fun flight_search_result(uuid: String): MutableLiveData<List<SearchResultResponse>>  {
+
+        val apiService = Api.getclient().create(Api::class.java)
+        val url =BASE_URL+"flight_search_results?uuid=$uuid"
+        println("********$url")
+        val call = apiService.flight_search_result(url)
+        call.enqueue(object : Callback<List<SearchResultResponse>>  {
+            override fun onResponse(call: Call<List<SearchResultResponse>> , response: Response<List<SearchResultResponse>> ) {
+
+                if (response.isSuccessful) {
+                    flight_search_resultLiveData.value=response.body()
+
+                }
+                else{
+                    Toast.makeText(application,""+response.errorBody(), Toast.LENGTH_SHORT).show()
+                    println("********${response.errorBody()}")
+                }
+
+            }
+            override fun onFailure(call: Call<List<SearchResultResponse>> , t: Throwable) {
+                Toast.makeText(application,t.message, Toast.LENGTH_SHORT).show()
+                println("********${t.message}")
+            }
+        })
+
+        return flight_search_resultLiveData
     }
 
 }
