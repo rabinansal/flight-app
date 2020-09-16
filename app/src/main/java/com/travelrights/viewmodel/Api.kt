@@ -5,6 +5,7 @@ package com.travelrights.viewmodel
 import com.google.gson.JsonObject
 import com.travelrights.model.AirportResponse
 import com.travelrights.model.Flight_searchResponse
+import com.travelrights.model.GeturlResponse
 import com.travelrights.model.SearchResultResponse
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -39,5 +40,7 @@ interface Api {
 
     @GET
     fun flight_search_result(@Url url: String?):Call<List<SearchResultResponse>>
+    @GET
+    fun urlresult(@Url url: String?):Call<GeturlResponse>
 
 }

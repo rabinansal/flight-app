@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3930D8</color>
-    <color name="colorPrimaryDark">#3930D8</color>
-    <color name="colorAccent">#3930D8</color>
+    <color name="colorPrimary">#1B74EC</color>
+    <color name="colorPrimaryDark">#1B74EC</color>
+    <color name="colorAccent">#1B74EC</color>
+    <color name="shadow">#01013F</color>
 
-
-    <color name="custom_header_text">#85B100</color>
-    <color name="custom_selected">#85B100</color>
-    <color name="custom_background">#A8D324</color>
-    <color name="custom_background_today">#85B100</color>
-    <color name="custom_background_disabled">#F0F8DB</color>
-    <color name="custom_text_selected">#FFFFFFFF</color>
-    <color name="custom_text_inactive">#7f778088</color>
     <color name="transparent">#00000000</color>
+
+
+
+    <color name="calendar_active_month_bg">#E61E4D</color>
+    <color name="calendar_bg">#ffffffff</color>
+    <color name="calendar_divider">#ffbababa</color>
+    <color name="calendar_inactive_month_bg">#DCECEEF6</color>
+    <color name="calendar_selected_day_bg">#3930D8</color>
+    <color name="calendar_highlighted_day_bg">#ccffcc</color>
+    <color name="calendar_selected_range_bg">#ff96caff</color>
+    <color name="calendar_text_inactive">#00000000</color>
+    <color name="calendar_text_active">#716D6E</color>
+    <color name="calendar_text_selected">#ffffffff</color>
+    <color name="calendar_text_unselectable">#BDBDBD</color>
+    <color name="calendar_text_highlighted">#6541A6</color>
 </resources>

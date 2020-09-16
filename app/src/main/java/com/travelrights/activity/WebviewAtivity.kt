@@ -27,24 +27,23 @@ class WebviewAtivity: AppCompatActivity() {
 
             super.onBackPressed()
         }
+        progressWheel.visibility = View.VISIBLE
+        progressbar.visibility = View.VISIBLE
         val title=intent.getStringExtra("title")
         val url=intent.getStringExtra("url")
-        web_txt.text=title
+        web_txt.text="Purchase:$title"
+        webview.clearView()
         webview.webChromeClient = WebChromeClient()
         webview.webViewClient = WebViewClient()
         webview.settings.allowFileAccessFromFileURLs = true
         webview.settings.allowUniversalAccessFromFileURLs = true
         webview.settings.allowContentAccess = true
         webview.settings.domStorageEnabled = true
-        webview.settings.setJavaScriptEnabled(false) // enable javascript
-        webview.settings.builtInZoomControls = true
-        webview.settings.setSupportZoom(true)
-        webview.settings.loadWithOverviewMode = true
-        webview.settings.useWideViewPort = true
-        webview.settings.builtInZoomControls = true
-        webview.settings.displayZoomControls = false
+        webview.settings.javaScriptEnabled = true // enable javascript
         webview.loadUrl(url)
         webview.webViewClient = WebViewController()
+
+
     }
 
     inner class WebViewController : WebViewClient() {
@@ -52,28 +51,17 @@ class WebviewAtivity: AppCompatActivity() {
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
 
             println("<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>$url")
-
             view.loadUrl(url)
-
-            return true
+            return false
         }
         override fun onLoadResource(view: WebView, url: String) {
-
             webview.visibility = View.VISIBLE
-            webview.loadUrl("javascript:(function() { " +
-                    "var foot = document.getElementsByClassName('footer')[0].style.display='none'; " +
-                    "})()")
 
         }
-
         override fun onPageFinished(view: WebView, url: String) {
             println("on finish")
-            webview.loadUrl("javascript:(function() { " +
-                    "var foot = document.getElementsByClassName('footer')[0].style.display='none'; " +
-                    "})()")
             progressWheel.visibility = View.GONE
             progressbar.visibility = View.GONE
-
         }
 
     }

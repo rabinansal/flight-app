@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root_layout"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryDark"
     tools:context="com.travelrights.activity.MainActivity">
 
 
@@ -24,19 +23,7 @@
         app:layout_constraintGuide_begin="16dp" />
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
@@ -45,12 +32,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.22" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.27" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -64,14 +45,29 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/upper_bg"
-            android:backgroundTint="@color/md_white_1000"
+            android:background="@drawable/done_background"
             android:fillViewport="true">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/_25sdp">
-
+                android:layout_height="match_parent">
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gv1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".05"/>
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gv2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".95"/>
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gv3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".5"/>
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline7"
                     android:layout_width="wrap_content"
@@ -79,174 +75,81 @@
                     android:orientation="horizontal"
                     app:layout_constraintGuide_end="16dp" />
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline12"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_way"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_end="16dp" />
+                    app:singleSelection="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/gv1"
+                    app:selectionRequired= "true"
+                    app:checkedChip="@id/chip_one">
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="16dp" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_one"
+                        style="@style/ChipStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_42sdp"
+                        android:text="  One Way  "
+                        android:textAppearance="@style/chipTextAppearance"
+                        android:textColor="@color/bg_chip_text_list"
+                        app:chipBackgroundColor="@color/bg_chip_state_list"
+                        app:chipStrokeColor="@color/bg_chip_state_stroke_list"
+                        app:chipStrokeWidth="1dp" />
 
-                <TextView
-                    android:id="@+id/tvFrom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/ms_medium"
-                    android:text="FROM"
-                    android:textColor="@color/md_grey_500"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_two"
+                        style="@style/ChipStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_42sdp"
+                        android:text="  Two Way  "
+                        android:padding="@dimen/_15sdp"
+                        android:textAppearance="@style/chipTextAppearance"
+                        android:textColor="@color/bg_chip_text_list"
+                        app:chipBackgroundColor="@color/bg_chip_state_list"
+                        app:chipStrokeColor="@color/bg_chip_state_stroke_list"
+                        app:chipStrokeWidth="1dp" />
 
-                <TextView
-                    android:id="@+id/tvDeptOn"
+                </com.google.android.material.chip.ChipGroup>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_medium"
-                    android:text="DEPARTURE ON"
-                    android:textColor="@color/md_grey_500"
-                    android:textSize="@dimen/_10ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/view" />
-
-                <TextView
-                    android:id="@+id/tvTravellerTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_medium"
-                    android:text="TRAVELLER"
-                    android:textColor="@color/md_grey_500"
-                    android:textSize="@dimen/_10ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline15"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/tvSplitView2" />
-
-                <TextView
-                    android:id="@+id/tvCabinClass"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/ms_medium"
-                    android:text="CABIN CLASS"
-                    android:textColor="@color/md_grey_500"
-                    android:textSize="@dimen/_10ssp"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/tvSplitView3" />
-
-                <TextView
-                    android:id="@+id/tvAdultTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_semibold"
-                    android:gravity="center"
-                    android:text="ADULT (+12 YRS)"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_8ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline15"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravellerAdultCount" />
-
-                <TextView
-                    android:id="@+id/tvChildTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_semibold"
-                    android:gravity="center"
-                    android:text="CHILD (2 - 12 YRS)"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_8ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline14"
-                    app:layout_constraintStart_toStartOf="@+id/guideline15"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravellerChildCount" />
-
-                <TextView
-                    android:id="@+id/tvInfantsTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/ms_semibold"
-                    android:gravity="center"
-                    android:text="INFANTS (-2 YRS)"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_8ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toStartOf="@+id/guideline14"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravellerInfantCount" />
-
-                <TextView
-                    android:id="@+id/tvRetOnTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_medium"
-                    android:text="RETURNING ON"
-                    android:textColor="@color/md_grey_500"
-                    android:textSize="@dimen/_10ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toStartOf="@+id/guideline13"
-                    app:layout_constraintTop_toBottomOf="@+id/view" />
-
-                <TextView
-                    android:id="@+id/tvToTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="@font/ms_medium"
-                    android:text="TO"
-                    android:textColor="@color/md_grey_500"
-                    app:layout_constraintBottom_toTopOf="@+id/tvScrollTo"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10" />
-
-
-                <HorizontalScrollView
                     android:id="@+id/tvScrollFrom"
-                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:scrollbars="none"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/tvFrom">
+                    app:layout_constraintStart_toStartOf="@+id/gv1"
+                    app:layout_constraintEnd_toStartOf="@id/gv2"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    app:layout_constraintTop_toBottomOf="@+id/chip_way">
+                    <TextView
+                        android:id="@+id/tvFrom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="FROM"
+                        android:layout_marginLeft="8dp"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/md_grey_500"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/tvFrom"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="8dp"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/tvAirport"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/crimson_bold"
+                            android:fontFamily="@font/montserrat_semibold"
                             android:singleLine="true"
-                            android:text="Mumbai"
+                            android:text="Dubai"
                             android:textColor="@color/md_black_1000"
-                            android:textSize="@dimen/_18ssp" />
+                            android:textSize="@dimen/_15ssp" />
 
 
                         <TextView
@@ -254,58 +157,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:fontFamily="@font/crimson_bold"
+                            android:fontFamily="@font/montserrat_semibold"
                             android:singleLine="true"
-                            android:text="BOM"
+                            android:text="DXB"
                             android:textColor="@color/md_grey_500"
-                            android:textSize="@dimen/_18ssp" />
+                            android:textSize="@dimen/_15ssp" />
 
 
                     </LinearLayout>
 
-                </HorizontalScrollView>
-
-
-                <HorizontalScrollView
-                    android:id="@+id/tvScrollTo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:scrollbars="none"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tvToAirport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/crimson_bold"
-                            android:singleLine="true"
-                            android:text="Delhi"
-                            android:textColor="@color/md_black_1000"
-                            android:textSize="@dimen/_18ssp" />
-
-                        <TextView
-                            android:id="@+id/tvToShortCode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:fontFamily="@font/crimson_bold"
-                            android:singleLine="true"
-                            android:text="DEL"
-                            android:textColor="@color/md_grey_500"
-                            android:textSize="@dimen/_18ssp" />
-
-                    </LinearLayout>
-
-                </HorizontalScrollView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -316,243 +177,400 @@
                     android:background="@drawable/back_button"
                     android:padding="12dp"
                     android:src="@drawable/ic_arrow_one"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
+                    app:layout_constraintEnd_toStartOf="@+id/gv2"
                     app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="@+id/guideline14"
                     app:layout_constraintTop_toBottomOf="@+id/tvScrollFrom" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:id="@+id/tvScrollTo"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@+id/gv1"
+                    app:layout_constraintEnd_toStartOf="@id/gv2"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView">
+                    <TextView
+                        android:id="@+id/tvToTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="TO"
+                        android:layout_marginLeft="8dp"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/md_grey_500"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/tvToTitle"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvToAirport"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:singleLine="true"
+                            android:text="Kozhikode"
+                            android:textColor="@color/md_black_1000"
+                            android:textSize="@dimen/_15ssp" />
+
+
+                        <TextView
+                            android:id="@+id/tvToShortCode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:singleLine="true"
+                            android:text="CCJ"
+                            android:textColor="@color/md_grey_500"
+                            android:textSize="@dimen/_15ssp" />
+
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
                 <View
                     android:id="@+id/view"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginTop="8dp"
                     android:background="@color/md_grey_300"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
+                    app:layout_constraintEnd_toEndOf="@id/gv2"
+                    app:layout_constraintStart_toStartOf="@+id/gv1"
                     app:layout_constraintTop_toBottomOf="@+id/tvScrollTo" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_60sdp"
+                    app:layout_constraintStart_toStartOf="@id/gv1"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    app:layout_constraintEnd_toStartOf="@id/gv3"
+                    android:id="@+id/dep_date"
+                    app:layout_constraintTop_toBottomOf="@+id/view">
+                    <TextView
+                        android:id="@+id/tvDeptOn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="DEPARTURE ON"
+                        android:textColor="@color/md_grey_500"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvDepDateDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:includeFontPadding="false"
+                        android:text="25"
+                        android:textColor="@color/md_black_1000"
+                        android:textSize="@dimen/_20ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvDeptOn" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvDeptOn"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:gravity="center|start"
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toEndOf="@+id/tvDepDateDay">
+
+                        <TextView
+                            android:id="@+id/tvDepMonthDateYr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="FEB 2019"
+                            android:textAllCaps="true"
+                            android:textColor="@color/md_grey_800"
+                            android:textSize="@dimen/_11ssp"
+                            app:layout_constraintEnd_toStartOf="@+id/guideline13"
+                            app:layout_constraintStart_toEndOf="@+id/tvDepDateDay"
+                            app:layout_constraintTop_toBottomOf="@+id/tvDeptOn" />
+                        <TextView
+                            android:id="@+id/tvDepMonthDateWeek"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="MONDAY"
+                            android:textAllCaps="true"
+                            android:textColor="@color/md_grey_800"
+                            android:textSize="@dimen/_11ssp"
+                            app:layout_constraintEnd_toStartOf="@+id/guideline13"
+                            app:layout_constraintStart_toEndOf="@+id/tvDepDateDay"
+                            app:layout_constraintTop_toBottomOf="@+id/tvDepMonthDateYr" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_60sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    app:layout_constraintStart_toStartOf="@id/gv3"
+                    app:layout_constraintEnd_toStartOf="@id/gv2"
+                    android:id="@+id/ret_date"
+                    app:layout_constraintTop_toBottomOf="@+id/view">
+                    <TextView
+                        android:id="@+id/tvRetOnTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="RETURNING ON"
+                        android:textColor="@color/md_grey_500"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvRetDateDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:includeFontPadding="false"
+                        android:text="25"
+                        android:textColor="@color/md_black_1000"
+                        android:textSize="@dimen/_20ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvRetOnTitle" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvRetOnTitle"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:gravity="center|start"
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toEndOf="@+id/tvRetDateDay">
+
+                        <TextView
+                            android:id="@+id/tvRetMonthYr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="FEB 2019"
+                            android:textAllCaps="true"
+                            android:textColor="@color/md_grey_800"
+                            android:textSize="@dimen/_11ssp"
+                            app:layout_constraintEnd_toStartOf="@+id/guideline13"
+                            app:layout_constraintStart_toEndOf="@+id/tvDepDateDay"
+                            app:layout_constraintTop_toBottomOf="@+id/tvDeptOn" />
+                        <TextView
+                            android:id="@+id/tvRetDateWeek"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="MONDAY"
+                            android:textAllCaps="true"
+                            android:textColor="@color/md_grey_800"
+                            android:textSize="@dimen/_11ssp"
+                            app:layout_constraintEnd_toStartOf="@+id/guideline13"
+                            app:layout_constraintStart_toEndOf="@+id/tvDepDateDay"
+                            app:layout_constraintTop_toBottomOf="@+id/tvDepMonthDateYr" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <View
-                    android:id="@+id/tvSplitView2"
+                    android:id="@+id/view1"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginTop="8dp"
                     android:background="@color/md_grey_300"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDepMonthDateWeek" />
+                    app:layout_constraintEnd_toEndOf="@id/gv2"
+                    app:layout_constraintStart_toStartOf="@+id/gv1"
+                    app:layout_constraintTop_toBottomOf="@+id/dep_date" />
 
                 <View
-                    android:id="@+id/tvSplitView3"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/md_grey_300"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/tvChildTitle" />
-
-                <View
-                    android:id="@+id/tvSplitView4"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/md_grey_300"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintHorizontal_bias="0.482"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
-
-                <View
-                    android:id="@+id/tvSplitVertical2"
+                    android:id="@+id/view3"
                     android:layout_width="1dp"
                     android:layout_height="0dp"
                     android:background="@color/md_grey_300"
-                    app:layout_constraintBottom_toTopOf="@+id/tvSplitView2"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
-                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintStart_toStartOf="@id/gv1"
+                    app:layout_constraintEnd_toEndOf="@id/gv2"
+                    app:layout_constraintBottom_toTopOf="@id/view1"
                     app:layout_constraintTop_toBottomOf="@+id/view" />
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="206dp" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_60sdp"
+                    app:layout_constraintStart_toStartOf="@id/gv1"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    app:layout_constraintEnd_toStartOf="@id/gv2"
+                    android:id="@+id/passenger"
+                    app:layout_constraintTop_toBottomOf="@+id/view3">
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent=".33" />
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent=".66" />
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="272dp" />
+                    <TextView
+                        android:id="@+id/tvTravellerTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="TRAVELLER"
+                        android:textColor="@color/md_grey_500"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline15"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent=".33" />
+                    <TextView
+                        android:id="@+id/tvTravellerAdultCount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="1"
+                        android:textColor="@color/md_grey_800"
+                        android:textSize="@dimen/_20ssp"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTravellerTitle" />
 
+                    <TextView
+                        android:id="@+id/tvTravellerChildCount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center|center_horizontal"
+                        android:includeFontPadding="false"
+                        android:text="0"
+                        android:textColor="@color/md_grey_800"
+                        android:textSize="@dimen/_20ssp"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline14"
+                        app:layout_constraintStart_toStartOf="@+id/guideline15"
+                        app:layout_constraintTop_toTopOf="@+id/tvTravellerAdultCount" />
+
+                    <TextView
+                        android:id="@+id/tvTravellerInfantCount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="0"
+                        android:textColor="@color/md_grey_800"
+                        android:textSize="@dimen/_20ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guideline14"
+                        app:layout_constraintTop_toTopOf="@+id/tvTravellerChildCount" />
+
+                    <TextView
+                        android:id="@+id/tvAdultTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:text="ADULT (+12 YRS)"
+                        android:textColor="@color/md_grey_800"
+                        android:textSize="@dimen/_8ssp"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTravellerAdultCount" />
+
+                    <TextView
+                        android:id="@+id/tvChildTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:text="CHILD (2 - 12 YRS)"
+                        android:textColor="@color/md_grey_800"
+                        android:textSize="@dimen/_8ssp"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline14"
+                        app:layout_constraintStart_toStartOf="@+id/guideline15"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTravellerChildCount" />
+
+                    <TextView
+                        android:id="@+id/tvInfantsTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:text="INFANTS (-2 YRS)"
+                        android:textColor="@color/md_grey_800"
+                        android:textSize="@dimen/_8ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guideline14"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTravellerInfantCount" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
                 <View
+                    android:id="@+id/view4"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintTop_toBottomOf="@+id/view"
-                    android:id="@+id/dep_date"
-                    app:layout_constraintBottom_toTopOf="@+id/tvSplitView2"
-                    app:layout_constraintEnd_toStartOf="@+id/tvSplitVertical2"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintTop_toBottomOf="@+id/view"
-                    android:id="@+id/ret_date"
-                    app:layout_constraintBottom_toTopOf="@+id/tvSplitView2"
-                    app:layout_constraintStart_toEndOf="@+id/tvSplitVertical2"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/md_grey_300"
+                    app:layout_constraintEnd_toEndOf="@id/gv2"
+                    app:layout_constraintStart_toStartOf="@+id/gv1"
+                    app:layout_constraintTop_toBottomOf="@+id/passenger" />
 
                 <TextView
-                    android:id="@+id/tvDepDateDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="@font/mirage_bold_font"
-                    android:includeFontPadding="false"
-                    android:text="25"
-                    android:textColor="@color/md_black_1000"
-                    android:textSize="@dimen/_25ssp"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvDepMonthDateWeek"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toTopOf="@+id/tvDepMonthDateYr" />
-
-                <TextView
-                    android:id="@+id/tvTravellerAdultCount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/mirage_bold_font"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:text="1"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_25ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline15"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTravellerTitle" />
-
-                <TextView
-                    android:id="@+id/tvTravellerChildCount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/mirage_bold_font"
-                    android:gravity="center|center_horizontal"
-                    android:includeFontPadding="false"
-                    android:text="0"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_25ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline14"
-                    app:layout_constraintStart_toStartOf="@+id/guideline15"
-                    app:layout_constraintTop_toTopOf="@+id/tvTravellerAdultCount" />
-
-                <TextView
-                    android:id="@+id/tvTravellerInfantCount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/mirage_bold_font"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:text="0"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_25ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toStartOf="@+id/guideline14"
-                    app:layout_constraintTop_toTopOf="@+id/tvTravellerChildCount" />
-
-                <TextView
-                    android:id="@+id/tvRetDateDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="@font/mirage_bold_font"
-                    android:includeFontPadding="false"
-                    android:text="25"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_25ssp"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvRetDateWeek"
-                    app:layout_constraintStart_toStartOf="@+id/guideline13"
-                    app:layout_constraintTop_toTopOf="@+id/tvRetMonthYr" />
-
-                <TextView
-                    android:id="@+id/tvDepMonthDateYr"
+                    android:id="@+id/tvCabinClass"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_semibold"
-                    android:text="FEB 2019"
-                    android:textAllCaps="true"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_12ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
-                    app:layout_constraintStart_toEndOf="@+id/tvDepDateDay"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDeptOn" />
-
-                <TextView
-                    android:id="@+id/tvRetMonthYr"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_semibold"
-                    android:text="FEB 2019"
-                    android:textAllCaps="true"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_12ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toEndOf="@+id/tvRetDateDay"
-                    app:layout_constraintTop_toBottomOf="@+id/tvRetOnTitle" />
-
-                <TextView
-                    android:id="@+id/tvDepMonthDateWeek"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_medium"
-                    android:text="MONDAY"
-                    android:textAllCaps="true"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_12ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
-                    app:layout_constraintStart_toEndOf="@+id/tvDepDateDay"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDepMonthDateYr" />
-
-                <TextView
-                    android:id="@+id/tvRetDateWeek"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/ms_medium"
-                    android:text="MONDAY"
-                    android:textAllCaps="true"
-                    android:textColor="@color/md_grey_800"
-                    android:textSize="@dimen/_12ssp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toEndOf="@+id/tvRetDateDay"
-                    app:layout_constraintTop_toBottomOf="@+id/tvRetMonthYr" />
-
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="CABIN CLASS"
+                    android:textColor="@color/md_grey_500"
+                    android:textSize="@dimen/_10ssp"
+                    app:layout_constraintStart_toStartOf="@+id/gv1"
+                    app:layout_constraintTop_toBottomOf="@+id/view4" />
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroup"
@@ -560,9 +578,8 @@
                     android:layout_height="0dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
+                    app:layout_constraintStart_toStartOf="@id/gv1"
                     app:layout_constraintTop_toBottomOf="@+id/tvCabinClass"
                     app:singleSelection="true"
                     app:selectionRequired= "true"
@@ -595,18 +612,27 @@
 
                 </com.google.android.material.chip.ChipGroup>
 
+                <View
+                    android:id="@+id/view5"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/md_grey_300"
+                    app:layout_constraintEnd_toEndOf="@id/gv2"
+                    app:layout_constraintStart_toStartOf="@+id/gv1"
+                    app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
 
                 <LinearLayout
                     android:id="@+id/findFlight"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/button_background"
+                    android:background="@drawable/gradient_bg"
                     android:gravity="center"
                     app:layout_constraintBottom_toTopOf="@+id/guideline7"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline12"
-                    app:layout_constraintStart_toStartOf="@+id/guideline10"
-                    app:layout_constraintTop_toBottomOf="@+id/tvSplitView4"
+                    app:layout_constraintEnd_toStartOf="@+id/gv2"
+                    app:layout_constraintStart_toStartOf="@+id/gv1"
+                    app:layout_constraintTop_toBottomOf="@+id/view5"
                     app:layout_constraintVertical_bias="1.0">
 
                     <TextView
@@ -615,7 +641,7 @@
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/search_icon"
                         android:drawablePadding="@dimen/_4sdp"
-                        android:fontFamily="@font/ms_bold"
+                        android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
                         android:text="@string/find_my_flight"
                         android:textColor="@color/md_white_1000" />
@@ -628,72 +654,31 @@
         </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/_220sdp"
-        android:layout_height="@dimen/_55sdp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="@dimen/_20sdp">
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_way"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                app:singleSelection="true"
-                android:layout_gravity="center"
-                app:selectionRequired= "true"
-                app:checkedChip="@id/chip_one">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_one"
-                    style="@style/ChipStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_40sdp"
-                    android:text="  One Way  "
-                    android:textAppearance="@style/chipTextAppearance"
-                    android:textColor="@color/bg_chip_text_list"
-                    app:chipBackgroundColor="@color/bg_chip_state_list"
-                    app:chipStrokeColor="@color/bg_chip_state_stroke_list"
-                    app:chipStrokeWidth="0dp" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_two"
-                    style="@style/ChipStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="  Two Way  "
-                    android:padding="@dimen/_15sdp"
-                    android:textAppearance="@style/chipTextAppearance"
-                    android:textColor="@color/bg_chip_text_list"
-                    app:chipBackgroundColor="@color/bg_chip_state_list"
-                    app:chipStrokeColor="@color/bg_chip_state_stroke_list"
-                    app:chipStrokeWidth="0dp" />
-
-            </com.google.android.material.chip.ChipGroup>
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:padding="@dimen/_5sdp"
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_15sdp"
+        android:textColor="@color/md_white_1000"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:srcCompat="@drawable/fly_emirates_cropped" />
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="travel" />
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_35sdp"
+        android:textColor="@color/md_white_1000"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text1"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="Right" />
 
     <ProgressBar
         android:layout_width="wrap_content"
@@ -704,6 +689,5 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/progress_circular"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 

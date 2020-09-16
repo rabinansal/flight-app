@@ -1,9 +1,3 @@
 package com.travelrights.model
 
-import com.google.gson.annotations.SerializedName
-
-data class SearchResultResponse(
-
-	@field:SerializedName("proposals")
-	val proposals: List<ProposalsItem?>? = null
-)
+data class SearchResultResponse(val proposals: ArrayList<ProposalsItem>? = null,val meta: MetaResponse? = null,val gates_info: Map<String,Gatesmember>? = null)

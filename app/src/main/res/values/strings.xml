@@ -1,4 +1,12 @@
 <resources>
-    <string name="app_name">TravelRights</string>
+    <string name="app_name">TravelRight</string>
     <string name="find_my_flight">FIND MY FLIGHT</string>
+    <string name="search">Search&#8230;</string>
+    <string name="day_name_format">EEE</string>
+    <string name="invalid_date">Date must be between %1$s and %2$s.</string>
+    <string name="month_only_name_format">MMMM</string>
+    <string name="year_only_format">yyyy</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="default_notification_channel_name" translatable="false">fcm_default</string>
+
 </resources>

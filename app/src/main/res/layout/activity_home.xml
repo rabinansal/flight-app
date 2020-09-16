@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+	    android:id="@+id/root_layout"
+	    android:orientation="vertical">
+
+	<include
+			layout="@layout/activity_main"
+			android:layout_width="match_parent"
+			android:id="@+id/home_layout"
+			android:layout_height="match_parent"/>
+
+
+	<include
+			layout="@layout/popup_search_flight"
+			android:layout_width="match_parent"
+			android:id="@+id/popup_layout"
+			android:visibility="gone"
+			android:layout_height="match_parent"/>
+
+
+
+</RelativeLayout>

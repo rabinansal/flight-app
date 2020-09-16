@@ -1,2 +1,3 @@
+include ':mylibrary'
 rootProject.name='FlightBooking'
 include ':app'

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "782769050507",
+    "firebase_url": "https://travelright-1da82.firebaseio.com",
+    "project_id": "travelright-1da82",
+    "storage_bucket": "travelright-1da82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782769050507:android:1f19118173aa089336558e",
+        "android_client_info": {
+          "package_name": "com.travelrights"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782769050507-tcjm4ojuhrkjau488opcgr9tmigdvjr7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZqyBTyVL7xW4GZ-cYVDTDJ69ChTz-JD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782769050507-tcjm4ojuhrkjau488opcgr9tmigdvjr7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

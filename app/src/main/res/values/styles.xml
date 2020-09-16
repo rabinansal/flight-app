@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowDisablePreview">true</item>
+
     </style>
 
     <style name="ChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
@@ -13,8 +15,8 @@
     </style>
 
     <style name="chipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
-        <item name="android:textSize">@dimen/_12ssp</item>
-        <item name="android:fontFamily">@font/ms_medium</item>
+        <item name="android:textSize">@dimen/_11ssp</item>
+        <item name="android:fontFamily">@font/montserrat_semibold</item>
     </style>
 
     <style name="popupAnimation" parent="android:Animation">
@@ -29,27 +31,29 @@
     <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
-    
-    <style name="DialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog">
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
-        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+
+
+    <style name="CalendarTitle">
+        <item name="android:textSize">@dimen/calendar_text_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingBottom">@dimen/calendar_month_title_bottommargin</item>
+        <item name="android:paddingTop">@dimen/calendar_month_topmargin</item>
     </style>
 
-
-    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/md_black_1000</item>
+    <style name="CalendarCell">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
     </style>
 
-    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/md_black_1000</item>
+    <style name="CalendarCell.DayHeader">
+        <item name="android:textSize">@dimen/calendar_text_small</item>
     </style>
 
-    <style name="CustomCalendar">
-        <item name="android:textSize">18sp</item>
-        <item name="android:gravity">start|left</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:color">@color/custom_calendar_text_selector</item>
+    <style name="CalendarCell.CalendarDate">
+        <item name="android:textSize">@dimen/calendar_text_medium</item>
+        <item name="android:textStyle">normal</item>
     </style>
 </resources>

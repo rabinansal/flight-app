@@ -65,8 +65,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/progressbar"
             android:layout_centerInParent="true"
-
-        android:layout_gravity="center"
+           android:layout_gravity="center"
     />
     <ProgressBar
         android:id="@+id/progressWheel"
@@ -75,7 +74,6 @@
         android:layout_height="@dimen/_4sdp"
         android:layout_alignParentBottom="true"
         android:indeterminateOnly="true"
-
         android:indeterminateTint="@color/colorAccent"
         android:secondaryProgress="@android:integer/config_shortAnimTime"/>
 

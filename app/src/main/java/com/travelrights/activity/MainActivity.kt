@@ -1,6 +1,6 @@
 package com.travelrights.activity
 
-import android.app.DatePickerDialog
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -13,31 +13,48 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.ActivityResult
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.squareup.timessquare.CalendarPickerView
 import com.travelrights.R
 import com.travelrights.adapter.AirportAdapter
 import com.travelrights.model.AirportResponse
-import com.travelrights.viewmodel.ApplicationViewModel
+import com.travelrights.model.Flight_searchResponse
+import com.travelrights.room.DatabaseClient
+import com.travelrights.utils.PrefManager
+import com.travelrights.utils.PrefManager.PREFERENCES
+import com.travelrights.utils.calanderpicker.CalendarPickerView
+import com.travelrights.viewmodel.Api
+import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_traveller.*
 import kotlinx.android.synthetic.main.bottom_traveller.view.*
 import kotlinx.android.synthetic.main.popup_calander.view.*
-import kotlinx.android.synthetic.main.popup_search_flight.view.*
-import kotlinx.android.synthetic.main.popup_search_flight.view.textViewTitle
+import kotlinx.android.synthetic.main.popup_search_flight.*
+import org.json.JSONArray
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -46,9 +63,8 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
-
+    private var back_pressed: Long = 0
     var airportList = ArrayList<AirportResponse>()
-    lateinit var mPopupWindow: PopupWindow
     lateinit var mPopupWindow1: PopupWindow
     var origin = ""
     var adapter: AirportAdapter?=null
@@ -66,19 +82,15 @@ class MainActivity : AppCompatActivity() {
 
     var classType = "Y"
     var twoWay = false
-
-    private lateinit var appViewModel: ApplicationViewModel
+    var appUpdateManager: AppUpdateManager?=null
+    private val TAG = "MainActivity"
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        appViewModel = ViewModelProviders.of(this).get(ApplicationViewModel::class.java)
-
+        setContentView(R.layout.activity_home)
         setUpInitDay()
-        fromAirPort.code="BOM"
-        toAirPort.code="DEL"
-        tvTravellerAdultCount.text = adultCount.toString()
-
+        appUpdateManager= com.google.android.play.core.appupdate.AppUpdateManagerFactory.create(applicationContext)
+        checkUpdate()
         tvRetOnTitle.isEnabled = false
         tvRetDateDay.isEnabled = false
         tvRetMonthYr.isEnabled = false
@@ -88,18 +100,15 @@ class MainActivity : AppCompatActivity() {
         tvRetMonthYr.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
         tvRetDateWeek.setTextColor(ContextCompat.getColor(this,R.color.md_grey_500))
 
-        tvAirport.setOnClickListener {
+        tvScrollFrom.setOnClickListener {
             origin = "From"
             displaySearchPopup("Origin", "Search Origin", origin)
         }
 
-        tvToAirport.setOnClickListener {
+        tvScrollTo.setOnClickListener {
             origin = "To"
             displaySearchPopup("Destination", "Search Destination", origin)
         }
-
-        tvShortCode.setOnClickListener { tvAirport.performClick() }
-        tvToShortCode.setOnClickListener { tvToAirport.performClick() }
 
         chip_way.setOnCheckedChangeListener { group: ChipGroup?, checkedId: Int ->
             val chip = group?.findViewById<Chip>(checkedId)
@@ -138,25 +147,17 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        tvTravellerAdultCount.setOnClickListener {
-            openTravellerSheet()
-        }
-
-        tvTravellerChildCount.setOnClickListener {
-            openTravellerSheet()
-        }
-
-        tvTravellerInfantCount.setOnClickListener {
+        passenger.setOnClickListener {
             openTravellerSheet()
         }
 
         dep_date.setOnClickListener {
-            calander_popup("dep")
+            calander_popup("dep",depDate)
         }
 
         ret_date.setOnClickListener {
 
-            calander_popup("return")
+            calander_popup("return",retDate)
         }
 
         chipGroup.setOnCheckedChangeListener { group: ChipGroup?, checkedId: Int ->
@@ -245,23 +246,128 @@ class MainActivity : AppCompatActivity() {
                 }
                 println("********$jsonObj")
                 progress_circular.visibility=View.VISIBLE
-                appViewModel.flight_search(jsonObj).observe(this, androidx.lifecycle.Observer {
-
-                    val i= Intent(applicationContext,SearchResultActivity::class.java)
-                    i.putExtra("search_id",it.search_id!!)
-                    startActivity(i)
-                    progress_circular.visibility=View.GONE
-
-                })
+                flight_search(jsonObj)
+                PrefManager.getInstance(applicationContext).putSharedString(PREFERENCES, jsonObj.toString())
+                PrefManager.getInstance(applicationContext).putSharedString("from",tvAirport.text.toString())
+                PrefManager.getInstance(applicationContext).putSharedString("to",tvToAirport.text.toString())
+                PrefManager.getInstance(applicationContext).putSharedString("from_code",fromAirPort.code)
+                PrefManager.getInstance(applicationContext).putSharedString("to_code",toAirPort.code)
 
             }
         }
 
     }
+    private fun checkUpdate() {
+        // Returns an intent object that you use to check for an update.
+        appUpdateManager!!.registerListener(listener!!)
+        val appUpdateInfoTask = appUpdateManager?.appUpdateInfo
+        // Checks that the platform will allow the specified type of update.
+        Log.d(TAG, "Checking for updates")
+        appUpdateInfoTask?.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                // Request the update.
+                Log.d(TAG, "Update available")
+                appUpdateManager!!.startUpdateFlowForResult(
+                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                    appUpdateInfo,
+                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+                    AppUpdateType.FLEXIBLE,
+                    // The current activity making the update request.
+                    this,
+                    // Include a request code to later monitor this update request.
+                    1)
+            } else {
+                Log.d(TAG, "No Update available")
+            }
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        appUpdateManager!!.unregisterListener(listener!!)
+    }
 
-    private fun calander_popup(dep: String) {
-        val inflater =
-            applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private val listener: InstallStateUpdatedListener? = InstallStateUpdatedListener { installState ->
+        if (installState.installStatus() == com.google.android.play.core.install.model.InstallStatus.DOWNLOADED) {
+            // After the update is downloaded, show a notification
+            // and request user confirmation to restart the app.
+            Log.d(TAG, "An update has been downloaded")
+            notiy()
+        }
+
+    }
+
+    private fun notiy() {
+        appUpdateManager!!.completeUpdate()
+        appUpdateManager!!.unregisterListener(listener!!)
+    }
+    override fun onResume() {
+        super.onResume()
+        appUpdateManager!!.appUpdateInfo.addOnSuccessListener {
+            if (it.installStatus() == InstallStatus.DOWNLOADED) {
+                notiy()
+            }
+        }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+       super.onActivityResult(requestCode, resultCode, data)
+       // super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode ==1) {
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    Log.d(TAG, "" + "Result Ok")
+                    //  handle user's approval }
+                }
+                Activity.RESULT_CANCELED -> {
+                    {
+//if you want to request the update again just call checkUpdate()
+                    }
+                    Log.d(TAG, "" + "Result Cancelled")
+                    //  handle user's rejection  }
+                }
+                ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
+                    //if you want to request the update again just call
+                     checkUpdate()
+                    Log.d(TAG, "" + "Update Failure")
+                    //  handle update failure
+                }
+            }
+        }
+    }
+    fun flight_search(jobj: JsonObject) {
+
+        val apiService = Api.getclient().create(Api::class.java)
+        val url = Api.BASE_URL +"flight_search"
+        val call = apiService.flight_search(url,jobj)
+        call.enqueue(object : Callback<Flight_searchResponse> {
+            override fun onResponse(call: Call<Flight_searchResponse>, response: Response<Flight_searchResponse>) {
+                progress_circular.visibility=View.GONE
+                if (response.isSuccessful) {
+
+                    val i= Intent(applicationContext,SearchResultActivity::class.java)
+                    i.putExtra("search_id",response.body()!!.search_id)
+                    startActivity(i)
+                }
+                else{
+
+                    Toast.makeText(application,""+response.errorBody(), Toast.LENGTH_SHORT).show()
+                }
+
+            }
+
+            override fun onFailure(call: Call<Flight_searchResponse>, t: Throwable) {
+                val toast=Toast.makeText(application,t.message, Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+                progress_circular.visibility=View.GONE
+            }
+        })
+
+    }
+
+
+    private fun calander_popup(dep: String, depDate: String) {
+        val inflater = applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val customViewCall1 = inflater.inflate(R.layout.popup_calander, null)
         mPopupWindow1 = PopupWindow(customViewCall1, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
@@ -271,13 +377,15 @@ class MainActivity : AppCompatActivity() {
         val nextYear: Calendar = Calendar.getInstance()
         nextYear.add(Calendar.YEAR, 1)
         val today = Date()
-        customViewCall1.calendar_view.init(today, nextYear.getTime()).withSelectedDate(today)
+        val departDate = SimpleDateFormat("dd MMMM yyyy").parse(depDate) as Date
+        customViewCall1.calendar_view.init(today, nextYear.time).withSelectedDate(departDate)
         customViewCall1.calendar_view.clearHighlightedDates()
         customViewCall1.calendar_view.setOnDateSelectedListener(object : CalendarPickerView.OnDateSelectedListener {
             override fun onDateSelected(date: Date?) {
 
                 val weekDay = SimpleDateFormat("EEEE").format(date!!)
-                val monthYr = SimpleDateFormat("MMMM yyyy").format(date)
+                val monthYr = SimpleDateFormat("MMM yyyy").format(date)
+                val monthYr1 = SimpleDateFormat("MMMM yyyy").format(date)
                 val dom = SimpleDateFormat("dd").format(date)
 
                 if(dep=="dep"){
@@ -285,14 +393,14 @@ class MainActivity : AppCompatActivity() {
                     tvDepMonthDateYr.text = monthYr
                     tvDepMonthDateWeek.text = weekDay
 
-                    depDate = "$dom $monthYr"
+                    this@MainActivity.depDate = "$dom $monthYr1"
                 }
                 else{
                     tvRetDateDay.text  = dom
                     tvRetMonthYr.text = monthYr
                     tvRetDateWeek.text  = weekDay
 
-                    retDate = "$dom $monthYr"
+                    retDate = "$dom $monthYr1"
                 }
                 mPopupWindow1.dismiss()
             }
@@ -335,23 +443,101 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpInitDay() {
 
+        val date:Date
+        val ret_date:Date
+        val day:String
+        val month:String
+        val month1:String
+        val week:String
+        val day1:String
+        val month2:String
+        val month3:String
+        val week1:String
+        val jsondata= PrefManager.getInstance(applicationContext).getSharedString(PREFERENCES,jsonObj.toString())
+        val to= PrefManager.getInstance(applicationContext).getSharedString("to",null)
+        val from= PrefManager.getInstance(applicationContext).getSharedString("from",null)
+        val to_code= PrefManager.getInstance(applicationContext).getSharedString("to_code",null)
+        val from_code= PrefManager.getInstance(applicationContext).getSharedString("from_code",null)
+        if(jsondata!="{}"){
+            tvAirport.text=from
+            tvToAirport.text=to
+            fromAirPort.code=from_code
+            toAirPort.code=to_code
+            tvShortCode.text=from_code
+            tvToShortCode.text=to_code
+            val  jobj=JSONObject(jsondata)
+            val segments=jobj.getString("segments")
+            adultCount=jobj.getJSONObject("passengers").getInt("adults")
+            childCount=jobj.getJSONObject("passengers").getInt("children")
+            infantCount=jobj.getJSONObject("passengers").getInt("infants")
+            val jsonary=JSONArray(segments)
+            println("jsondata9******${jsonary.length()}")
+            if(jsonary.length()>1){
+                val date2=jsonary.getJSONObject(1).getString("date")
+                val date1=jsonary.getJSONObject(0).getString("date")
+                date= SimpleDateFormat("yyyy-MM-dd").parse(date1) as Date
+                ret_date= SimpleDateFormat("yyyy-MM-dd").parse(date2) as Date
 
-        val date = Calendar.getInstance().time
-        val day = SimpleDateFormat("dd").format(date)
-        val month = SimpleDateFormat("MMMM yyyy").format(date)
-        val week = SimpleDateFormat("EEEE").format(date)
+                day = SimpleDateFormat("dd").format(date)
+                month = SimpleDateFormat("MMM yyyy").format(date)
+                month1 = SimpleDateFormat("MMMM yyyy").format(date)
+                week = SimpleDateFormat("EEEE").format(date)
 
+                day1 = SimpleDateFormat("dd").format(ret_date)
+                month2 = SimpleDateFormat("MMM yyyy").format(ret_date)
+                month3 = SimpleDateFormat("MMMM yyyy").format(ret_date)
+                week1 = SimpleDateFormat("EEEE").format(ret_date)
+            }
+            else{
+                val date1=jsonary.getJSONObject(0).getString("date")
+                date= SimpleDateFormat("yyyy-MM-dd").parse(date1) as Date
+
+                day = SimpleDateFormat("dd").format(date)
+                month = SimpleDateFormat("MMM yyyy").format(date)
+                month1 = SimpleDateFormat("MMMM yyyy").format(date)
+                week = SimpleDateFormat("EEEE").format(date)
+
+                day1 = SimpleDateFormat("dd").format(date)
+                month2 = SimpleDateFormat("MMM yyyy").format(date)
+                month3 = SimpleDateFormat("MMMM yyyy").format(date)
+                week1 = SimpleDateFormat("EEEE").format(date)
+            }
+
+
+
+        }
+        else{
+
+            date = Calendar.getInstance().time
+
+            day = SimpleDateFormat("dd").format(date)
+            month = SimpleDateFormat("MMM yyyy").format(date)
+            month1 = SimpleDateFormat("MMMM yyyy").format(date)
+            week = SimpleDateFormat("EEEE").format(date)
+
+            day1 = SimpleDateFormat("dd").format(date)
+            month2 = SimpleDateFormat("MMM yyyy").format(date)
+            month3 = SimpleDateFormat("MMMM yyyy").format(date)
+            week1= SimpleDateFormat("EEEE").format(date)
+            fromAirPort.code="DXB"
+            toAirPort.code="CCJ"
+        }
         tvDepDateDay.text = day
         tvDepMonthDateYr.text = month
         tvDepMonthDateWeek.text = week
 
 
-        tvRetDateDay.text = day
-        tvRetMonthYr.text = month
-        tvRetDateWeek.text = week
+        tvRetDateDay.text = day1
+        tvRetMonthYr.text = month2
+        tvRetDateWeek.text = week1
 
-        depDate = "$day $month"
-        retDate = "$day $month"
+        depDate = "$day $month1"
+        retDate = "$day1 $month3"
+
+        tvTravellerAdultCount.text = adultCount.toString()
+        tvTravellerChildCount.text = childCount.toString()
+        tvTravellerInfantCount.text = infantCount.toString()
+
     }
 
     private fun swapAirports(frmAirport: AirportResponse, tAirport: AirportResponse) {
@@ -379,94 +565,168 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun displaySearchPopup(title: String, searchHint: String, origin: String) {
+        popup_layout.visibility=View.VISIBLE
+        val animation: Animation = AnimationUtils.loadAnimation(applicationContext, R.anim.top)
+        popup_layout.animation = animation
+        edtSearch.text.clear()
+        closePopup.setOnClickListener {
+            popup_layout.visibility=View.GONE
+            val animation1: Animation = AnimationUtils.loadAnimation(applicationContext, R.anim.bottom_out)
+            popup_layout.animation = animation1
 
-        val inflater3 =
-            applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val customViewCall = inflater3.inflate(R.layout.popup_search_flight, null)
-        mPopupWindow = PopupWindow(
-            customViewCall,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-
-        customViewCall.closePopup.setOnClickListener {
-            mPopupWindow.dismiss()
+            val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(edtSearch.windowToken, 0)
         }
+        edtSearch.requestFocus()
 
-        customViewCall.textViewTitle.text = title
-        customViewCall.edtSearch.hint = searchHint
+        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+        textViewTitle.text = title
+        edtSearch.hint = searchHint
 
-        val rvFlights = customViewCall.rvFlights as RecyclerView
+        val rvFlights = rvFlights as RecyclerView
         rvFlights.setHasFixedSize(true)
         rvFlights.layoutManager = LinearLayoutManager(this)
-        rvFlights.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+       // rvFlights.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         rvFlights.visibility = View.GONE
+        DatabaseClient
+            .getInstance(applicationContext)
+            .appDatabase
+            .taskDao()
+            .deleteDuplicates()
 
-        customViewCall.edtSearch.addTextChangedListener(object : TextWatcher,
-            AirportAdapter.OnItemClickListener {
+        var taskList: List<AirportResponse> = DatabaseClient
+            .getInstance(applicationContext)
+            .appDatabase
+            .taskDao()
+            .all
+        println("111111111111${taskList.size}")
+        if (taskList.isNotEmpty()){
+            if(taskList.size>6){
+                DatabaseClient
+                    .getInstance(applicationContext)
+                    .appDatabase
+                    .taskDao()
+                    .deleteById(taskList[0].id!!)
+            }
+            taskList = DatabaseClient.getInstance(applicationContext).appDatabase.taskDao().all
+            rvFlights.visibility = View.VISIBLE
+            Collections.reverse(taskList)
+            adapter= AirportAdapter(this@MainActivity,taskList, object :AirportAdapter.OnItemClickListener{
+                override fun onItemClick(item: AirportResponse, view: View) {
+                    when(view.id) {
+                        R.id.linr_click -> {
+
+                            imm.hideSoftInputFromWindow(edtSearch.windowToken, 0)
+                            if (origin.equals("From")) {
+                                tvAirport.text = item.name
+                                tvShortCode.text = item.code
+                                fromAirPort = item
+                            } else if (origin.equals("To")) {
+                                tvToAirport.text = item.name
+                                tvToShortCode.text = item.code
+                                toAirPort = item
+                            }
+
+                            popup_layout.visibility=View.GONE
+                            val animation1: Animation = AnimationUtils.loadAnimation(applicationContext, R.anim.bottom_out)
+                            popup_layout.animation = animation1
+
+                        }
+
+                    }
+                }
+
+            })
+            rvFlights.adapter = adapter
+        }
+        edtSearch.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                airportList.clear()
+
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if(s.isEmpty()){
                     rvFlights.visibility = View.GONE
                 }else{
                     rvFlights.visibility = View.VISIBLE
 
-                    appViewModel.getAirportlist(s.toString()).observe(this@MainActivity, androidx.lifecycle.Observer {
+                    val apiService = Api.getclient().create(Api::class.java)
+                    val url ="https://autocomplete.travelpayouts.com/places2?term=$s&locale=en&types[]= city"
+                    val call = apiService.airportList(url)
+                    popup_progress.visibility=View.VISIBLE
+                    call.enqueue(object : Callback<List<AirportResponse>> {
+                        override fun onResponse(call: Call<List<AirportResponse>>, response: Response<List<AirportResponse>>) {
 
+                            if (response.isSuccessful) {
+                                popup_progress.visibility=View.GONE
+                                airportList.clear()
+                                airportList= response.body() as ArrayList<AirportResponse>
+                                adapter= AirportAdapter(this@MainActivity, airportList, object :AirportAdapter.OnItemClickListener{
+                                    override fun onItemClick(item: AirportResponse, view: View) {
+                                        when(view.id) {
+                                            R.id.linr_click -> {
+                                                imm.hideSoftInputFromWindow(edtSearch.windowToken, 0)
+                                                val task=AirportResponse()
+                                                task.country_name=item.country_name
+                                                task.code=item.code
+                                                task.main_airport_name=item.main_airport_name
+                                                task.name=item.name
 
-                        if(it.size!=0){
-                            airportList= it as ArrayList<AirportResponse>
-                            adapter=
-                                AirportAdapter(
-                                    this@MainActivity,
-                                    airportList,
-                                    this
-                                )
-                            rvFlights.adapter = adapter
+                                                DatabaseClient.getInstance(applicationContext).appDatabase
+                                                    .taskDao()
+                                                    .insert(task)
+
+                                                if(origin.equals("From")){
+                                                    tvAirport.text = item.name
+                                                    tvShortCode.text = item.code
+
+                                                    fromAirPort = item
+                                                }
+                                                else if(origin.equals("To")){
+                                                    tvToAirport.text = item.name
+                                                    tvToShortCode.text = item.code
+                                                    toAirPort = item
+                                                }
+
+                                                popup_layout.visibility=View.GONE
+                                                val animation1: Animation = AnimationUtils.loadAnimation(applicationContext, R.anim.bottom_out)
+                                                popup_layout.animation = animation1
+
+                                            }
+                                        }
+
+                                    }
+
+                                })
+                                rvFlights.adapter = adapter
+
+                            }
 
                         }
-
-
-
+                        override fun onFailure(call: Call<List<AirportResponse>>, t: Throwable) {
+                            popup_progress.visibility=View.GONE
+                            val toast=Toast.makeText(application,t.message, Toast.LENGTH_SHORT)
+                            toast.setGravity(Gravity.CENTER, 0, 0)
+                            toast.show()
+                        }
                     })
 
-                }
-            }
 
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun onItemClick(item: AirportResponse) {
-
-                if(origin.equals("From")){
-                    tvAirport.text = item.name
-                    tvShortCode.text = item.code
-
-                    fromAirPort = item
-                }
-                else if(origin.equals("To")){
-                    tvToAirport.text = item.name
-                    tvToShortCode.text = item.code
-
-                    toAirPort = item
                 }
 
-                mPopupWindow.dismiss()
             }
+
         })
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            mPopupWindow.elevation = 5.0f
-        }
-
-        mPopupWindow.isFocusable = true
-        mPopupWindow.animationStyle = R.style.popupAnimation
-        mPopupWindow.showAtLocation(root_layout, Gravity.CENTER, 0, 0)
     }
 
     private fun openTravellerSheet(){
@@ -578,5 +838,24 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    override fun onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed()
+        }
+        else {
+            if (popup_layout.visibility == View.VISIBLE) {
+                popup_layout.visibility=View.GONE
+                val animation1: Animation = AnimationUtils.loadAnimation(applicationContext, R.anim.bottom_out)
+                popup_layout.animation = animation1
+            } else {
+                val toast=Toast.makeText(application,"Press Again to Exit from  App", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+                back_pressed = System.currentTimeMillis()
+            }
+
+        }
+    }
 
 }
+

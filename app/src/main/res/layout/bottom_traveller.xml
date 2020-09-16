@@ -41,7 +41,7 @@
                 android:id="@+id/tvCountAdult"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ms_medium"
+                android:fontFamily="@font/montserrat_semibold"
                 android:text="1"
                 android:textSize="@dimen/_14ssp"
                 android:includeFontPadding="false"
@@ -51,10 +51,10 @@
                 android:id="@+id/tvCountAdultTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ms_regular"
+                android:fontFamily="@font/montserrat_semibold"
                 android:layout_marginTop="@dimen/_4sdp"
                 android:text="Above 12 years"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_11ssp"
                 android:includeFontPadding="false"
                 android:textColor="@color/md_grey_500"/>
 
@@ -116,7 +116,7 @@
                 android:id="@+id/tvCountChild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ms_medium"
+                android:fontFamily="@font/montserrat_semibold"
                 android:text="0"
                 android:textSize="@dimen/_14ssp"
                 android:includeFontPadding="false"
@@ -126,10 +126,10 @@
                 android:id="@+id/tvCountChildTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ms_regular"
+                android:fontFamily="@font/montserrat_semibold"
                 android:layout_marginTop="@dimen/_4sdp"
                 android:text="2 - 12 years"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_11ssp"
                 android:includeFontPadding="false"
                 android:textColor="@color/md_grey_500"/>
 
@@ -191,7 +191,7 @@
                 android:id="@+id/tvCountInfant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ms_medium"
+                android:fontFamily="@font/montserrat_semibold"
                 android:text="0"
                 android:textSize="@dimen/_14ssp"
                 android:includeFontPadding="false"
@@ -204,7 +204,7 @@
                 android:fontFamily="@font/ms_regular"
                 android:layout_marginTop="@dimen/_4sdp"
                 android:text="Below 2 years"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_11ssp"
                 android:includeFontPadding="false"
                 android:textColor="@color/md_grey_500"/>
 
@@ -240,15 +240,14 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_margin="@dimen/_10sdp"
         android:gravity="center"
-        android:background="@drawable/search_background"
-        android:backgroundTint="@color/colorPrimary">
+        android:background="@drawable/gradient_bg">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DONE"
             android:textColor="@color/md_white_1000"
-            android:fontFamily="@font/ms_semibold"/>
+            android:fontFamily="@font/montserrat_bold"/>
 
     </LinearLayout>
 
