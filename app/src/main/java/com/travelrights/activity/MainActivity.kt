@@ -443,8 +443,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpInitDay() {
 
-        val date:Date
-        val ret_date:Date
+        var date:Date
+        var ret_date:Date
         val day:String
         val month:String
         val month1:String
@@ -477,12 +477,16 @@ class MainActivity : AppCompatActivity() {
                 val date1=jsonary.getJSONObject(0).getString("date")
                 date= SimpleDateFormat("yyyy-MM-dd").parse(date1) as Date
                 ret_date= SimpleDateFormat("yyyy-MM-dd").parse(date2) as Date
-
+                if (date.compareTo(Calendar.getInstance().time) < 0){
+                    date = Calendar.getInstance().time
+                }
                 day = SimpleDateFormat("dd").format(date)
                 month = SimpleDateFormat("MMM yyyy").format(date)
                 month1 = SimpleDateFormat("MMMM yyyy").format(date)
                 week = SimpleDateFormat("EEEE").format(date)
-
+                if (ret_date.compareTo(Calendar.getInstance().time) < 0){
+                    ret_date = Calendar.getInstance().time
+                }
                 day1 = SimpleDateFormat("dd").format(ret_date)
                 month2 = SimpleDateFormat("MMM yyyy").format(ret_date)
                 month3 = SimpleDateFormat("MMMM yyyy").format(ret_date)
@@ -491,7 +495,9 @@ class MainActivity : AppCompatActivity() {
             else{
                 val date1=jsonary.getJSONObject(0).getString("date")
                 date= SimpleDateFormat("yyyy-MM-dd").parse(date1) as Date
-
+                if (date.compareTo(Calendar.getInstance().time) < 0){
+                    date = Calendar.getInstance().time
+                }
                 day = SimpleDateFormat("dd").format(date)
                 month = SimpleDateFormat("MMM yyyy").format(date)
                 month1 = SimpleDateFormat("MMMM yyyy").format(date)
